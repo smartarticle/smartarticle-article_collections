@@ -1,0 +1,24 @@
+kumuluzee:
+  name: rso-collections
+  env:
+    name: dev
+  version: 1.0.0
+  server:
+    base-url: http://localhost:8083
+    http:
+      port: 8083
+  datasources:
+    - jndi-name: jdbc/CollectionsDS
+      connection-url: jdbc:postgresql://172.17.0.1:5433/collection
+      username: dbuser
+      password: postgres
+      max-pool-size: 20
+  config:
+    etcd:
+      hosts: http://172.17.0.1:2379
+    discovery:
+      etcd:
+        hosts: http://172.17.0.1:2379
+app-properties:
+  external-services:
+    enabled: true

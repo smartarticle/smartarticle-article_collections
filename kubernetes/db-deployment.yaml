@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collection-db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collection-db
+  template:
+    metadata:
+      labels:
+        app: collection-db
+    spec:
+      containers:
+      - image: postgres:10.5
+        name: collection-db
+        env:
+        - name: POSTGRES_USER
+          value: dbuser
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: POSTGRES_DB
+          value: collection
+        ports:
+        - containerPort: 5432
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: collection-db
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+  selector:
+    app: collection-db
