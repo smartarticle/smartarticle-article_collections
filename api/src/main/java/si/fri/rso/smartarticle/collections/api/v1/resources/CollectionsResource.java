@@ -33,9 +33,10 @@ public class CollectionsResource {
     public Response getCollections() {
         if (appProperties.isCollectionServicesEnabled()) {
             List<Collection> collections = collectionsBean.getCollections(uriInfo);
-
+            appProperties.setHealthy(true);
             return Response.ok(collections).build();
         }
+        appProperties.setHealthy(true);
         return Response.ok().build();
     }
 
@@ -46,9 +47,10 @@ public class CollectionsResource {
             List<Collection> collections;
 
             collections = collectionsBean.getCollectionsFilter(uriInfo);
-
+            appProperties.setHealthy(true);
             return Response.status(Response.Status.OK).entity(collections).build();
         }
+        appProperties.setHealthy(true);
         return Response.ok().build();
     }
 
@@ -59,11 +61,13 @@ public class CollectionsResource {
             Collection collection = collectionsBean.getCollection(collectionId);
 
             if (collection == null) {
+                appProperties.setHealthy(true);
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
-
+            appProperties.setHealthy(true);
             return Response.status(Response.Status.OK).entity(collection).build();
         }
+        appProperties.setHealthy(true);
         return Response.ok().build();
     }
 }

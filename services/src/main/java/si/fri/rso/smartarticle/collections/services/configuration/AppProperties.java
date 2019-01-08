@@ -14,6 +14,9 @@ public class AppProperties {
     @ConfigValue(value = "collection-article-services.enabled", watch = true)
     private boolean collectionArticleServicesEnabled;
 
+    @ConfigValue(watch = true)
+    private boolean healthy;
+
     public boolean isCollectionServicesEnabled() {
         return collectionServicesEnabled;
     }
@@ -28,5 +31,13 @@ public class AppProperties {
 
     public void setCollectionArticleServicesEnabled(boolean collectionArticleServicesEnabled) {
         this.collectionArticleServicesEnabled = collectionArticleServicesEnabled;
+    }
+
+    public boolean isHealthy() {
+        return healthy;
+    }
+
+    public void setHealthy(boolean healthy) {
+        this.healthy = healthy;
     }
 }

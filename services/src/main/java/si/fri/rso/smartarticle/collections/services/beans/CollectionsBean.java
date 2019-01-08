@@ -79,6 +79,7 @@ public class CollectionsBean {
         Collection collection = em.find(Collection.class, collectionId);
 
         if (collection == null) {
+            appProperties.setHealthy(false);
             throw new NotFoundException();
         }
 

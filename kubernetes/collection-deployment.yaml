@@ -13,7 +13,7 @@ spec:
         app: collection
     spec:
       containers:
-      - image: ajugo/smartarticle-collections:0.5
+      - image: ajugo/smartarticle-collections:0.6
         name: collection
         imagePullPolicy: "Always"
         env:
@@ -35,6 +35,12 @@ spec:
         - containerPort: 8083
           name: server
           protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: server
+          initialDelaySeconds: 20
+          periodSeconds: 3
 
 ---
 
