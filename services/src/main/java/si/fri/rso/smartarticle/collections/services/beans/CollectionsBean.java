@@ -36,14 +36,12 @@ public class CollectionsBean {
     @PostConstruct
     private void init() {}
 
-    @Inject
-    @DiscoverService("smartarticle-users")
-    private Optional<String> baseUrl;
-
-    public List<Collection> getCollections() {
+    public List<Collection> getCollections(UriInfo uriInfo) {
         if (appProperties.isExternalServicesEnabled()) {
-            TypedQuery<Collection> query = em.createNamedQuery("Collection.getAll", Collection.class);
-            return query.getResultList();
+            QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery())
+                    .defaultOffset(0)
+                    .build();
+            return JPAUtils.queryEntities(em, Collection.class, queryParameters);
         }
         return null;
     }

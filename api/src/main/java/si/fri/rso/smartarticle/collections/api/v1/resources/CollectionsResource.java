@@ -28,7 +28,7 @@ public class CollectionsResource {
     @GET
     public Response getCollections() {
 
-        List<Collection> collections = collectionsBean.getCollections();
+        List<Collection> collections = collectionsBean.getCollections(uriInfo);
 
         return Response.ok(collections).build();
     }

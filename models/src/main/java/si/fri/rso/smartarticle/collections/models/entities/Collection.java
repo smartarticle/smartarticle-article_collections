@@ -20,6 +20,8 @@ public class Collection {
 
     private Instant creation;
 
+    private String accountId;
+
 
     public Integer getId() {
         return id;
@@ -48,6 +50,14 @@ public class Collection {
 
     public void setCreation(Instant creation) {
         this.creation = creation;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
 }

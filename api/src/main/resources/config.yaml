@@ -1,5 +1,5 @@
 kumuluzee:
-  name: rso-collections
+  name: smartarticle-collections
   env:
     name: dev
   version: 1.0.0
@@ -9,16 +9,16 @@ kumuluzee:
       port: 8083
   datasources:
     - jndi-name: jdbc/CollectionsDS
-      connection-url: jdbc:postgresql://172.17.0.1:5433/collection
+      connection-url: jdbc:postgresql://159.122.187.161:32569/collection
       username: dbuser
       password: postgres
       max-pool-size: 20
   config:
     etcd:
-      hosts: http://172.17.0.1:2379
+      hosts: http://159.122.187.161:31065
     discovery:
       etcd:
-        hosts: http://172.17.0.1:2379
+        hosts:http://159.122.187.161:31065
 app-properties:
   external-services:
     enabled: true
