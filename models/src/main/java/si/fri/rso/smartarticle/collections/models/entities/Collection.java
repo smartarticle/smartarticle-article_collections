@@ -1,7 +1,10 @@
 package si.fri.rso.smartarticle.collections.models.entities;
 
+import si.fri.rso.smartarticle.collections.models.dtos.Article;
+
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
 
 @Entity(name = "collection")
 @NamedQueries(value =
@@ -21,6 +24,9 @@ public class Collection {
     private Instant creation;
 
     private String accountId;
+
+    @Transient
+    private List<Article> articles;
 
 
     public Integer getId() {
@@ -60,4 +66,11 @@ public class Collection {
         this.accountId = accountId;
     }
 
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
+    }
 }

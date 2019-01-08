@@ -4,15 +4,22 @@ package si.fri.rso.smartarticle.collections.services.beans;
 import com.kumuluz.ee.discovery.annotations.DiscoverService;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import si.fri.rso.smartarticle.collections.models.dtos.Article;
 import si.fri.rso.smartarticle.collections.models.entities.Collection;
 import si.fri.rso.smartarticle.collections.services.configuration.AppProperties;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,15 +40,27 @@ public class CollectionsBean {
     @Inject
     private CollectionsBean collectionsBean;
 
+    private Client httpClient;
+
+    @Inject
+    @DiscoverService("smartarticle-articles")
+    private Provider<Optional<String>> articleBaseProvider;
+
     @PostConstruct
-    private void init() {}
+    private void init() { httpClient = ClientBuilder.newClient();}
 
     public List<Collection> getCollections(UriInfo uriInfo) {
         if (appProperties.isExternalServicesEnabled()) {
             QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery())
                     .defaultOffset(0)
                     .build();
-            return JPAUtils.queryEntities(em, Collection.class, queryParameters);
+            List<Collection> collections = JPAUtils.queryEntities(em, Collection.class, queryParameters);
+            for (Collection collection: collections) {
+                try {
+                    collection.setArticles(collectionsBean.getArticles(collection.getId()));
+                } catch (InternalServerErrorException e){}
+            }
+            return collections;
         }
         return null;
     }
@@ -62,6 +81,7 @@ public class CollectionsBean {
             throw new NotFoundException();
         }
 
+        collection.setArticles(collectionsBean.getArticles(collectionId));
         return collection;
     }
 
@@ -114,6 +134,25 @@ public class CollectionsBean {
             return false;
 
         return true;
+    }
+
+
+    public List<Article> getArticles(Integer collectiontId) {
+        Optional<String> baseUrl = articleBaseProvider.get();
+        if (baseUrl.isPresent()) {
+            try {
+                String link = baseUrl.get();
+                return httpClient
+                        .target(link + "/v1/articles?where=collectionId:EQ:" + collectiontId)
+                        .request().get(new GenericType<List<Article>>() {
+                        });
+            } catch (WebApplicationException | ProcessingException e) {
+                log.severe(e.getMessage());
+                return null;
+            }
+        }
+        return null;
+
     }
 
 
