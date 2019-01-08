@@ -20,9 +20,13 @@ kumuluzee:
   config:
     etcd:
       hosts: http://159.122.187.161:31065
-    discovery:
-      etcd:
-        hosts:http://159.122.187.161:31065
+  discovery:
+    etcd:
+      hosts: http://159.122.187.161:31065
+  metrics:
+    web-instrumentation:
+    - name: customers-endpoint
+      url-pattern: /v1/collections/*
 app-properties:
   collection-services:
     enabled: true

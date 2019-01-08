@@ -43,6 +43,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.kumuluz.ee.metrics</groupId>
+            <artifactId>kumuluzee-metrics-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>si.fri.rso.smartarticle</groupId>
             <artifactId>collection-models</artifactId>
         </dependency>
