@@ -87,7 +87,7 @@ public class CollectionsBean {
     }
 
 
-    private List<Article> getArticles(Integer collectiontId) {
+    public List<Article> getArticles(Integer collectiontId) {
         Optional<String> baseUrl = articleBaseProvider.get();
         if (baseUrl.isPresent()) {
             try {
