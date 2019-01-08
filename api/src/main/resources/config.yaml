@@ -20,5 +20,7 @@ kumuluzee:
       etcd:
         hosts:http://159.122.187.161:31065
 app-properties:
-  external-services:
+  collection-services:
+    enabled: true
+  collection-article-services:
     enabled: true

@@ -50,19 +50,20 @@ public class CollectionsBean {
     private void init() { httpClient = ClientBuilder.newClient();}
 
     public List<Collection> getCollections(UriInfo uriInfo) {
-        if (appProperties.isExternalServicesEnabled()) {
-            QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery())
-                    .defaultOffset(0)
-                    .build();
-            List<Collection> collections = JPAUtils.queryEntities(em, Collection.class, queryParameters);
-            for (Collection collection: collections) {
+        QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery())
+                .defaultOffset(0)
+                .build();
+        List<Collection> collections = JPAUtils.queryEntities(em, Collection.class, queryParameters);
+        if (appProperties.isCollectionArticleServicesEnabled()) {
+            for (Collection collection : collections) {
                 try {
                     collection.setArticles(collectionsBean.getArticles(collection.getId()));
-                } catch (InternalServerErrorException e){}
+                } catch (InternalServerErrorException e) {
+                    log.severe(e.getMessage());
+                }
             }
-            return collections;
         }
-        return null;
+        return collections;
     }
 
     public List<Collection> getCollectionsFilter(UriInfo uriInfo) {
@@ -85,59 +86,8 @@ public class CollectionsBean {
         return collection;
     }
 
-    public Collection createCollection(Collection collection) {
 
-        try {
-            beginTx();
-            em.persist(collection);
-            commitTx();
-        } catch (Exception e) {
-            rollbackTx();
-        }
-
-        return collection;
-    }
-
-    public Collection putCollection(String collectionId, Collection collection) {
-
-        Collection c = em.find(Collection.class, collectionId);
-
-        if (c == null) {
-            return null;
-        }
-
-        try {
-            beginTx();
-            collection.setId(c.getId());
-            collection = em.merge(collection);
-            commitTx();
-        } catch (Exception e) {
-            rollbackTx();
-        }
-
-        return collection;
-    }
-
-    public boolean deleteCollection(String collectionId) {
-
-        Collection collection = em.find(Collection.class, collectionId);
-
-        if (collection != null) {
-            try {
-                beginTx();
-                em.remove(collection);
-                commitTx();
-            } catch (Exception e) {
-                rollbackTx();
-            }
-        } else
-            return false;
-
-        return true;
-    }
-
-
-    public List<Article> getArticles(Integer collectiontId) {
+    private List<Article> getArticles(Integer collectiontId) {
         Optional<String> baseUrl = articleBaseProvider.get();
         if (baseUrl.isPresent()) {
             try {
@@ -155,19 +105,4 @@ public class CollectionsBean {
 
     }
 
-
-    private void beginTx() {
-        if (!em.getTransaction().isActive())
-            em.getTransaction().begin();
-    }
-
-    private void commitTx() {
-        if (em.getTransaction().isActive())
-            em.getTransaction().commit();
-    }
-
-    private void rollbackTx() {
-        if (em.getTransaction().isActive())
-            em.getTransaction().rollback();
-    }
 }
