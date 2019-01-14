@@ -45,7 +45,7 @@ kumuluzee:
                       </Configuration>'
   metrics:
     web-instrumentation:
-    - name: customers-endpoint
+    - name: collections-endpoint
       url-pattern: /v1/collections/*
 app-properties:
   collection-services:
