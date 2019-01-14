@@ -1,10 +1,11 @@
 package si.fri.rso.smartarticle.collections.api.v1.resources;
 
+import com.kumuluz.ee.logs.cdi.Log;
 import si.fri.rso.smartarticle.collections.models.entities.Collection;
 import si.fri.rso.smartarticle.collections.services.beans.CollectionsBean;
 import si.fri.rso.smartarticle.collections.services.configuration.AppProperties;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -14,7 +15,8 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 
-@RequestScoped
+@Log
+@ApplicationScoped
 @Path("/collections")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
